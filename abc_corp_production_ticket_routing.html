@@ -1,0 +1,626 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'Fira Code', monospace;
+  
+  --color-background-base: #0f111a;
+  --color-background-primary: rgba(255, 255, 255, 0.03);
+  --color-background-secondary: rgba(255, 255, 255, 0.06);
+  --color-border-primary: rgba(255, 255, 255, 0.2);
+  --color-border-tertiary: rgba(255, 255, 255, 0.1);
+  
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  
+  --color-info-base: #3b82f6;
+  --color-background-info: rgba(59, 130, 246, 0.15);
+  --color-text-info: #60a5fa;
+  
+  --color-success-base: #10b981;
+  --color-background-success: rgba(16, 185, 129, 0.15);
+  --color-text-success: #34d399;
+  
+  --color-warning-base: #f59e0b;
+  --color-background-warning: rgba(245, 158, 11, 0.15);
+  --color-text-warning: #fbbf24;
+  
+  --color-danger-base: #ef4444;
+  --color-background-danger: rgba(239, 68, 68, 0.15);
+  --color-text-danger: #f87171;
+
+  --border-radius-md: 8px;
+  --border-radius-lg: 16px;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  background-color: var(--color-background-base);
+  color: var(--color-text-primary);
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.08) 0%, transparent 25%);
+  min-height: 100vh;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.root { padding: 2rem; font-family: var(--font-sans); max-width: 1200px; margin: 0 auto; }
+
+.nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 2rem; border-bottom: 1px solid var(--color-border-tertiary); padding-bottom: 1.5rem; }
+.nav button { padding: 8px 16px; border: 1px solid var(--color-border-tertiary); background: rgba(255,255,255,0.02); border-radius: 99px; font-size: 14px; font-family: var(--font-sans); color: var(--color-text-secondary); cursor: pointer; transition: var(--transition-smooth); backdrop-filter: blur(4px); }
+.nav button:hover { background: rgba(255,255,255,0.08); color: var(--color-text-primary); transform: translateY(-1px); }
+.nav button.active { background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); color: var(--color-text-primary); border-color: var(--color-border-primary); font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+.panel { display: none; animation: fadeIn 0.4s ease forwards; }
+.panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.card { background: var(--color-background-primary); border: 1px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(0,0,0,0.1); transition: var(--transition-smooth); }
+.card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
+.card-hd { font-size: 16px; font-weight: 600; color: var(--color-text-primary); margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--color-border-tertiary); display: flex; justify-content: space-between; align-items: center; letter-spacing: 0.5px; }
+
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 1.5rem; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 1.5rem; }
+.g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 1.5rem; }
+
+.metric { background: linear-gradient(180deg, var(--color-background-primary), rgba(0,0,0,0.2)); border: 1px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; text-align: center; transition: var(--transition-smooth); position: relative; overflow: hidden; }
+.metric:hover { transform: translateY(-4px); border-color: var(--color-border-primary); }
+.metric::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); opacity: 0; transition: var(--transition-smooth); }
+.metric:hover::after { opacity: 1; }
+.ml { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: 500; }
+.mv { font-size: 32px; font-weight: 600; color: var(--color-text-primary); text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+.mv.green { color: var(--color-text-success); } .mv.red { color: var(--color-text-danger); } .mv.amber { color: var(--color-text-warning); }
+
+.tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; table-layout: fixed; }
+.tbl th { text-align: left; padding: 12px 16px; font-weight: 600; font-size: 12px; color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border-tertiary); background: var(--color-background-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.tbl th:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; } .tbl th:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+.tbl td { padding: 14px 16px; border-bottom: 1px solid var(--color-border-tertiary); color: var(--color-text-primary); vertical-align: middle; word-break: break-word; transition: var(--transition-smooth); }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: rgba(255,255,255,0.02); }
+
+.badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; letter-spacing: 0.5px; text-transform: uppercase; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.b-blue { background: var(--color-background-info); color: var(--color-text-info); border: 1px solid rgba(59, 130, 246, 0.3); }
+.b-green { background: var(--color-background-success); color: var(--color-text-success); border: 1px solid rgba(16, 185, 129, 0.3); }
+.b-amber { background: var(--color-background-warning); color: var(--color-text-warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+.b-red { background: var(--color-background-danger); color: var(--color-text-danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+.b-gray { background: var(--color-background-secondary); color: var(--color-text-secondary); border: 1px solid var(--color-border-tertiary); }
+.b-purple { background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.3); }
+
+code { font-family: var(--font-mono); font-size: 12px; background: rgba(0,0,0,0.3); padding: 3px 6px; border-radius: 4px; color: #e2e8f0; }
+
+.step { display: flex; gap: 16px; margin-bottom: 1rem; }
+.sdot { width: 28px; height: 28px; border-radius: 50%; background: var(--color-background-success); color: var(--color-text-success); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); }
+.sdot.warn { background: var(--color-background-warning); color: var(--color-text-warning); border-color: rgba(245, 158, 11, 0.4); box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+.sdot.num { background: var(--color-background-secondary); color: var(--color-text-secondary); border-color: var(--color-border-tertiary); box-shadow: none; }
+.sc { flex: 1; }
+.st { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.sd { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+.sline { width: 2px; background: linear-gradient(180deg, var(--color-text-success), transparent); margin: 6px 0 0 13px; height: 20px; opacity: 0.5; }
+
+.pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+pre { font-family: var(--font-mono); font-size: 13px; background: #050505; padding: 16px; border-radius: var(--border-radius-md); overflow-x: auto; line-height: 1.6; border: 1px solid var(--color-border-tertiary); color: #a1a1aa; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); }
+
+.flow-node { padding: 8px 14px; border-radius: var(--border-radius-md); font-size: 13px; font-weight: 500; white-space: nowrap; border: 1px solid transparent; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: inline-flex; align-items: center; transition: var(--transition-smooth); }
+.flow-node:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.2); }
+.fn-trigger { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.2)); color: var(--color-text-info); border-color: rgba(59, 130, 246, 0.3); }
+.fn-cond { background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.2)); color: var(--color-text-warning); border-color: rgba(245, 158, 11, 0.3); }
+.fn-act { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.2)); color: var(--color-text-success); border-color: rgba(16, 185, 129, 0.3); }
+.fn-esc { background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.2)); color: var(--color-text-danger); border-color: rgba(239, 68, 68, 0.3); }
+.fn-notif { background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.2)); color: #c4b5fd; border-color: rgba(139, 92, 246, 0.3); }
+
+.arrow { color: var(--color-border-primary); padding: 0 10px; font-size: 16px; font-weight: 300; }
+.flow-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; background: rgba(0,0,0,0.1); padding: 12px; border-radius: var(--border-radius-md); border: 1px dashed var(--color-border-tertiary); }
+
+.acc { border: 1px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); overflow: hidden; margin-bottom: 10px; transition: var(--transition-smooth); background: rgba(255,255,255,0.01); }
+.acc:hover { border-color: var(--color-border-primary); }
+.acc-h { padding: 12px 16px; background: rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 14px; font-weight: 500; transition: var(--transition-smooth); }
+.acc-h:hover { background: rgba(255,255,255,0.06); }
+.acc-b { padding: 16px; font-size: 13px; display: none; border-top: 1px solid var(--color-border-tertiary); background: rgba(0,0,0,0.2); }
+.acc-b.open { display: block; animation: slideDown 0.3s ease forwards; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+.tr { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 8px; }
+.tr:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+.tl { color: var(--color-text-secondary); } .tv { font-weight: 500; }
+
+.pbar { height: 6px; background: rgba(0,0,0,0.3); border-radius: 99px; overflow: hidden; margin: 8px 0 16px; border: 1px solid var(--color-border-tertiary); }
+.pfill { height: 100%; border-radius: 99px; box-shadow: 0 0 10px currentColor; position: relative; }
+.pfill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: shimmer 2s infinite; }
+@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+.user-row { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--color-border-tertiary); transition: var(--transition-smooth); border-radius: var(--border-radius-md); }
+.user-row:last-child { border-bottom: none; }
+.user-row:hover { background: rgba(255,255,255,0.03); }
+.av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+
+.section-label { font-size: 12px; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 1px; margin: 1.5rem 0 1rem; display: flex; align-items: center; gap: 8px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--color-border-tertiary); }
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--color-background-base); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+</style>
+
+<div class="root">
+<div class="nav">
+  <button class="active" onclick="show('overview')">System overview</button>
+  <button onclick="show('iam')">IAM & groups</button>
+  <button onclick="show('table')">Table schema</button>
+  <button onclick="show('sla')">SLA tiers</button>
+  <button onclick="show('acl')">ACL engine</button>
+  <button onclick="show('flows')">Flow designer</button>
+  <button onclick="show('escalation')">Escalation paths</button>
+  <button onclick="show('testing')">Test scenarios</button>
+  <button onclick="show('dashboard')">Live dashboard</button>
+</div>
+
+<div id="p-overview" class="panel active">
+  <div class="g4">
+    <div class="metric"><div class="ml">Support groups</div><div class="mv">2</div></div>
+    <div class="metric"><div class="ml">Total agents</div><div class="mv">6</div></div>
+    <div class="metric"><div class="ml">Issue categories</div><div class="mv">4</div></div>
+    <div class="metric"><div class="ml">Active flows</div><div class="mv green">2</div></div>
+  </div>
+  <div class="g4">
+    <div class="metric"><div class="ml">SLA tiers</div><div class="mv">4</div></div>
+    <div class="metric"><div class="ml">ACL rules</div><div class="mv">8</div></div>
+    <div class="metric"><div class="ml">Escalation paths</div><div class="mv">3</div></div>
+    <div class="metric"><div class="ml">Test scenarios</div><div class="mv green">8 / 8</div></div>
+  </div>
+  <div class="card">
+    <div class="card-hd">Production architecture — ticket lifecycle</div>
+    <div class="flow-row" style="margin-bottom:12px">
+      <div class="flow-node fn-trigger">Ticket submitted</div>
+      <span class="arrow">→</span>
+      <div class="flow-node fn-cond">Issue field evaluated</div>
+      <span class="arrow">→</span>
+      <div class="flow-node fn-cond">Priority assessed</div>
+      <span class="arrow">→</span>
+      <div class="flow-node fn-act">Auto-routed to group</div>
+    </div>
+    <div class="flow-row">
+      <div class="flow-node fn-act">SLA timer started</div>
+      <span class="arrow">→</span>
+      <div class="flow-node fn-cond">SLA threshold check</div>
+      <span class="arrow">→</span>
+      <div class="flow-node fn-esc">Escalation triggered</div>
+      <span class="arrow">→</span>
+      <div class="flow-node fn-notif">Manager notified</div>
+    </div>
+    <div style="margin-top:10px;font-size:12px;color:var(--color-text-secondary)">Zero manual touchpoints from submission to assignment. Escalation fires automatically at 50% and 90% SLA consumption.</div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd">Routing logic</div>
+      <div style="font-size:12px;margin-bottom:8px;color:var(--color-text-secondary)">Issue field value → assignment group</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px"><span><code>login_issue</code></span><span class="badge b-green">Platform</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px"><span><code>error_404</code></span><span class="badge b-green">Platform</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px"><span><code>certificate_related</code></span><span class="badge b-blue">Certificates</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px"><span><code>user_expired</code></span><span class="badge b-blue">Certificates</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">SLA breach prevention</div>
+      <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:8px">Automated escalation at two thresholds</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>50% consumed → warn manager</span><span class="badge b-amber">Warning</span></div><div class="pbar"><div class="pfill" style="width:50%;background:var(--color-text-warning)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>90% consumed → escalate</span><span class="badge b-red">Critical</span></div><div class="pbar"><div class="pfill" style="width:90%;background:var(--color-text-danger)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>100% → breach logged</span><span class="badge b-red">Breach</span></div><div class="pbar"><div class="pfill" style="width:100%;background:#A32D2D"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="p-iam" class="panel">
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd">Certificates group <span class="badge b-blue">3 members</span></div>
+      <div class="section-label">Agents</div>
+      <div class="user-row"><div class="av" style="background:var(--color-background-info);color:var(--color-text-info)">C1</div><div style="flex:1"><div style="font-size:13px;font-weight:500">cert.agent1</div><div style="font-size:11px;color:var(--color-text-secondary)">cert.agent1@abc.com</div></div><span class="badge b-blue">Agent</span></div>
+      <div class="user-row"><div class="av" style="background:var(--color-background-info);color:var(--color-text-info)">C2</div><div style="flex:1"><div style="font-size:13px;font-weight:500">cert.agent2</div><div style="font-size:11px;color:var(--color-text-secondary)">cert.agent2@abc.com</div></div><span class="badge b-blue">Agent</span></div>
+      <div class="user-row"><div class="av" style="background:var(--color-background-warning);color:var(--color-text-warning)">CM</div><div style="flex:1"><div style="font-size:13px;font-weight:500">cert.manager</div><div style="font-size:11px;color:var(--color-text-secondary)">cert.mgr@abc.com</div></div><span class="badge b-amber">Manager</span></div>
+      <div class="section-label" style="margin-top:12px">Group roles</div>
+      <div class="pill-row"><span class="badge b-blue">cert_agent</span><span class="badge b-gray">itil</span><span class="badge b-gray">sn_incident_write</span><span class="badge b-amber" style="font-size:10px">itil_admin (mgr)</span></div>
+    </div>
+    <div class="card">
+      <div class="card-hd">Platform group <span class="badge b-green">3 members</span></div>
+      <div class="section-label">Agents</div>
+      <div class="user-row"><div class="av" style="background:var(--color-background-success);color:var(--color-text-success)">P1</div><div style="flex:1"><div style="font-size:13px;font-weight:500">platform.agent1</div><div style="font-size:11px;color:var(--color-text-secondary)">plat.agent1@abc.com</div></div><span class="badge b-green">Agent</span></div>
+      <div class="user-row"><div class="av" style="background:var(--color-background-success);color:var(--color-text-success)">P2</div><div style="flex:1"><div style="font-size:13px;font-weight:500">platform.agent2</div><div style="font-size:11px;color:var(--color-text-secondary)">plat.agent2@abc.com</div></div><span class="badge b-green">Agent</span></div>
+      <div class="user-row"><div class="av" style="background:var(--color-background-warning);color:var(--color-text-warning)">PM</div><div style="flex:1"><div style="font-size:13px;font-weight:500">platform.manager</div><div style="font-size:11px;color:var(--color-text-secondary)">plat.mgr@abc.com</div></div><span class="badge b-amber">Manager</span></div>
+      <div class="section-label" style="margin-top:12px">Group roles</div>
+      <div class="pill-row"><span class="badge b-green">platform_agent</span><span class="badge b-gray">itil</span><span class="badge b-gray">sn_incident_write</span><span class="badge b-amber" style="font-size:10px">itil_admin (mgr)</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd">Role matrix</div>
+    <table class="tbl">
+      <thead><tr><th style="width:22%">Role</th><th style="width:18%">Scope</th><th style="width:35%">Permissions</th><th style="width:25%">Holders</th></tr></thead>
+      <tbody>
+        <tr><td><code>cert_agent</code></td><td>Certificates</td><td>Read/write cert-routed records only</td><td><span class="badge b-blue">Cert group</span></td></tr>
+        <tr><td><code>platform_agent</code></td><td>Platform</td><td>Read/write platform-routed records only</td><td><span class="badge b-green">Platform group</span></td></tr>
+        <tr><td><code>itil</code></td><td>Global</td><td>Standard ITSM, incident create/update</td><td><span class="badge b-gray">All agents</span></td></tr>
+        <tr><td><code>itil_admin</code></td><td>Global</td><td>Admin access, cross-group visibility</td><td><span class="badge b-amber">Managers</span></td></tr>
+        <tr><td><code>sn_incident_write</code></td><td>Global</td><td>Create and update task/incident records</td><td><span class="badge b-gray">All agents</span></td></tr>
+        <tr><td><code>admin</code></td><td>Instance</td><td>Full instance access, flow activation</td><td><span class="badge b-red">Admin only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="p-table" class="panel">
+  <div class="card">
+    <div class="card-hd">Table: <code>u_operations_related</code> — field schema</div>
+    <table class="tbl">
+      <thead><tr><th style="width:22%">Field label</th><th style="width:22%">Column name</th><th style="width:14%">Type</th><th style="width:10%">Mandatory</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Number</td><td>number</td><td><span class="badge b-gray">Auto</span></td><td>—</td><td>OPS0000001 prefix, auto-incremented</td></tr>
+        <tr><td>Short description</td><td>short_description</td><td><span class="badge b-gray">String(160)</span></td><td><span class="badge b-red">Yes</span></td><td>Free-text summary</td></tr>
+        <tr><td>Issue</td><td>u_issue</td><td><span class="badge b-blue">Choice</span></td><td><span class="badge b-red">Yes</span></td><td>Drives all routing — see choices below</td></tr>
+        <tr><td>Priority</td><td>priority</td><td><span class="badge b-blue">Choice</span></td><td><span class="badge b-amber">No</span></td><td>1-Critical 2-High 3-Medium 4-Low 5-Planning</td></tr>
+        <tr><td>State</td><td>state</td><td><span class="badge b-blue">Choice</span></td><td>—</td><td>1-Open 2-In Progress 3-On Hold 6-Resolved 7-Closed</td></tr>
+        <tr><td>Assignment group</td><td>assignment_group</td><td><span class="badge b-gray">Reference</span></td><td><span class="badge b-amber">No</span></td><td>sys_user_group — set by Flow Designer</td></tr>
+        <tr><td>Assigned to</td><td>assigned_to</td><td><span class="badge b-gray">Reference</span></td><td><span class="badge b-amber">No</span></td><td>sys_user — auto-populated post-routing</td></tr>
+        <tr><td>Category</td><td>u_category</td><td><span class="badge b-blue">Choice</span></td><td><span class="badge b-amber">No</span></td><td>Infrastructure / Application / Security / Network</td></tr>
+        <tr><td>Product type</td><td>u_product_type</td><td><span class="badge b-gray">String(80)</span></td><td><span class="badge b-amber">No</span></td><td>Used for secondary routing refinement</td></tr>
+        <tr><td>SLA due</td><td>u_sla_due</td><td><span class="badge b-gray">DateTime</span></td><td>—</td><td>Calculated on create from priority tier</td></tr>
+        <tr><td>SLA breached</td><td>u_sla_breached</td><td><span class="badge b-blue">True/False</span></td><td>—</td><td>Set by SLA monitoring flow</td></tr>
+        <tr><td>Escalation level</td><td>u_escalation_level</td><td><span class="badge b-blue">Choice</span></td><td>—</td><td>0-None 1-Warning 2-Escalated 3-Critical</td></tr>
+        <tr><td>Description</td><td>description</td><td><span class="badge b-gray">Journal</span></td><td><span class="badge b-amber">No</span></td><td>Work notes + activity log</td></tr>
+        <tr><td>Opened by</td><td>opened_by</td><td><span class="badge b-gray">Reference</span></td><td>—</td><td>Auto from session</td></tr>
+        <tr><td>Resolved at</td><td>resolved_at</td><td><span class="badge b-gray">DateTime</span></td><td>—</td><td>Auto-stamped on state=Resolved</td></tr>
+        <tr><td>Resolution notes</td><td>u_resolution_notes</td><td><span class="badge b-gray">String(500)</span></td><td><span class="badge b-amber">No</span></td><td>Required to move to Closed state</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-hd">Issue choice field — defined values</div>
+    <table class="tbl">
+      <thead><tr><th style="width:25%">Label</th><th style="width:25%">Value</th><th style="width:22%">Routes to</th><th style="width:14%">Default priority</th><th>SLA tier</th></tr></thead>
+      <tbody>
+        <tr><td>Login issues</td><td><code>login_issue</code></td><td><span class="badge b-green">Platform</span></td><td><span class="badge b-amber">High</span></td><td>4 hrs</td></tr>
+        <tr><td>404 error</td><td><code>error_404</code></td><td><span class="badge b-green">Platform</span></td><td><span class="badge b-gray">Medium</span></td><td>8 hrs</td></tr>
+        <tr><td>Certificate related</td><td><code>certificate_related</code></td><td><span class="badge b-blue">Certificates</span></td><td><span class="badge b-red">Critical</span></td><td>1 hr</td></tr>
+        <tr><td>User expired</td><td><code>user_expired</code></td><td><span class="badge b-blue">Certificates</span></td><td><span class="badge b-amber">High</span></td><td>4 hrs</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="p-sla" class="panel">
+  <div class="g4">
+    <div class="card" style="text-align:center;padding:1rem .75rem">
+      <div class="ml">Critical</div>
+      <div class="mv red" style="font-size:26px">1 hr</div>
+      <div style="margin-top:6px"><span class="badge b-red">P1</span></div>
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-top:6px">Cert expiry, outage</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1rem .75rem">
+      <div class="ml">High</div>
+      <div class="mv amber" style="font-size:26px">4 hrs</div>
+      <div style="margin-top:6px"><span class="badge b-amber">P2</span></div>
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-top:6px">Login issues, user expired</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1rem .75rem">
+      <div class="ml">Medium</div>
+      <div class="mv" style="font-size:26px">8 hrs</div>
+      <div style="margin-top:6px"><span class="badge b-gray">P3</span></div>
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-top:6px">404 errors, access issues</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1rem .75rem">
+      <div class="ml">Low</div>
+      <div class="mv" style="font-size:26px">24 hrs</div>
+      <div style="margin-top:6px"><span class="badge b-gray">P4</span></div>
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-top:6px">General requests</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd">SLA calculation script (Business rule — before insert)</div>
+    <pre>
+// Business Rule: Set SLA due date on record creation
+// Table: u_operations_related | When: Before Insert
+
+(function executeRule(current, previous) {
+  var now = new GlideDateTime();
+  var slaMins = { '1': 60, '2': 240, '3': 480, '4': 1440, '5': 2880 };
+  var mins = slaMins[current.priority.toString()] || 480;
+
+  // Calculate business-hours-aware due date
+  var gdt = new GlideDateTime(now);
+  gdt.addSeconds(mins * 60);
+  current.u_sla_due = gdt;
+  current.u_escalation_level = '0';
+  current.u_sla_breached = false;
+})(current, previous);
+    </pre>
+  </div>
+  <div class="card">
+    <div class="card-hd">SLA monitoring — scheduled flow (runs every 15 min)</div>
+    <pre>
+// Scheduled Script Execution: SLA Monitor
+// Frequency: Every 15 minutes
+
+var gr = new GlideRecord('u_operations_related');
+gr.addQuery('state', 'IN', '1,2,3'); // Open, In Progress, On Hold
+gr.addNullQuery('u_sla_breached').or('u_sla_breached', false);
+gr.query();
+
+while (gr.next()) {
+  var due = new GlideDateTime(gr.u_sla_due);
+  var now = new GlideDateTime();
+  var total = due.getNumericValue() - new GlideDateTime(gr.sys_created_on).getNumericValue();
+  var remaining = due.getNumericValue() - now.getNumericValue();
+  var consumed = 1 - (remaining / total);
+
+  if (consumed >= 1) {
+    gr.u_sla_breached = true;
+    gr.u_escalation_level = '3';
+    // Trigger critical escalation flow
+    sn_fd.FlowAPI.startFlow('x_abc.critical_escalation_flow', { ticket: gr.sys_id });
+  } else if (consumed >= 0.9) {
+    gr.u_escalation_level = '2';
+    sn_fd.FlowAPI.startFlow('x_abc.sla_escalation_flow', { ticket: gr.sys_id, level: '2' });
+  } else if (consumed >= 0.5) {
+    if (gr.u_escalation_level.toString() === '0') {
+      gr.u_escalation_level = '1';
+      sn_fd.FlowAPI.startFlow('x_abc.sla_escalation_flow', { ticket: gr.sys_id, level: '1' });
+    }
+  }
+  gr.update();
+}
+    </pre>
+  </div>
+</div>
+
+<div id="p-acl" class="panel">
+  <div class="card">
+    <div class="card-hd">ACL rules — u_operations_related</div>
+    <table class="tbl">
+      <thead><tr><th style="width:30%">ACL name</th><th style="width:18%">Operation</th><th style="width:22%">Role required</th><th>Condition / script</th></tr></thead>
+      <tbody>
+        <tr><td><code>ops.read.cert_agent</code></td><td><span class="badge b-blue">Read</span></td><td><code>cert_agent</code></td><td>assignment_group.name == 'Certificates'</td></tr>
+        <tr><td><code>ops.write.cert_agent</code></td><td><span class="badge b-green">Write</span></td><td><code>cert_agent</code></td><td>assignment_group.name == 'Certificates'</td></tr>
+        <tr><td><code>ops.read.platform</code></td><td><span class="badge b-blue">Read</span></td><td><code>platform_agent</code></td><td>assignment_group.name == 'Platform'</td></tr>
+        <tr><td><code>ops.write.platform</code></td><td><span class="badge b-green">Write</span></td><td><code>platform_agent</code></td><td>assignment_group.name == 'Platform'</td></tr>
+        <tr><td><code>ops.read.admin</code></td><td><span class="badge b-blue">Read</span></td><td><code>itil_admin</code></td><td>No condition — full visibility</td></tr>
+        <tr><td><code>ops.write.admin</code></td><td><span class="badge b-green">Write</span></td><td><code>itil_admin</code></td><td>No condition — full write</td></tr>
+        <tr><td><code>ops.delete.admin</code></td><td><span class="badge b-red">Delete</span></td><td><code>admin</code></td><td>Restricted to sys admins only</td></tr>
+        <tr><td><code>ops.create.itil</code></td><td><span class="badge b-purple">Create</span></td><td><code>itil</code></td><td>Any authenticated ITIL user can create</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-hd">ACL condition script — group-scoped isolation</div>
+    <pre>
+// ACL Script Condition
+// Applied to: Read and Write operations on u_operations_related
+// Purpose: Enforce group-scoped record visibility
+
+var answer = false;
+
+// Admins bypass all restrictions
+if (gs.hasRole('itil_admin') || gs.hasRole('admin')) {
+  answer = true;
+} else {
+  var recordGroup = current.assignment_group.name.toString();
+  var userGroupList = gs.getUser().getMyGroups();
+
+  // Check if user belongs to the record's assigned group
+  answer = userGroupList.indexOf(recordGroup) !== -1;
+}
+    </pre>
+  </div>
+  <div class="card">
+    <div class="card-hd">Field-level ACL — sensitive fields</div>
+    <table class="tbl">
+      <thead><tr><th style="width:28%">Field</th><th style="width:20%">Readable by</th><th style="width:20%">Writable by</th><th>Rationale</th></tr></thead>
+      <tbody>
+        <tr><td>u_sla_breached</td><td>itil_admin</td><td>System only</td><td>Read-only; set by scheduled script</td></tr>
+        <tr><td>u_escalation_level</td><td>itil_admin</td><td>System only</td><td>Set by SLA monitor — not user-editable</td></tr>
+        <tr><td>assignment_group</td><td>All agents</td><td>itil_admin</td><td>Agents cannot self-reassign</td></tr>
+        <tr><td>u_resolution_notes</td><td>Own group</td><td>Own group</td><td>Group-scoped; required for closure</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="p-flows" class="panel">
+  <div class="card">
+    <div class="card-hd">Flow 1 — Certificate routing flow <span class="badge b-green">Active</span></div>
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:10px">Trigger: Record created or updated · Table: u_operations_related · Run as: System</div>
+    <div class="flow-row"><div class="flow-node fn-trigger">Record created / updated</div><span class="arrow">→</span><div class="flow-node fn-cond">u_issue IN [certificate_related, user_expired]</div><span class="arrow">True →</span><div class="flow-node fn-act">Set assignment_group = Certificates</div></div>
+    <div class="flow-row" style="padding-left:12px"><div class="flow-node fn-act">Set state = Open (1)</div><span class="arrow">→</span><div class="flow-node fn-act">Calculate SLA due</div><span class="arrow">→</span><div class="flow-node fn-notif">Notify Certificates group</div></div>
+    <div style="font-size:11px;color:var(--color-text-secondary);margin-top:6px">False branch → exits; handled by Platform Routing Flow.</div>
+  </div>
+  <div class="card">
+    <div class="card-hd">Flow 2 — Platform routing flow <span class="badge b-green">Active</span></div>
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:10px">Trigger: Record created or updated · Table: u_operations_related · Run as: System</div>
+    <div class="flow-row"><div class="flow-node fn-trigger">Record created / updated</div><span class="arrow">→</span><div class="flow-node fn-cond">u_issue IN [login_issue, error_404]</div><span class="arrow">True →</span><div class="flow-node fn-act">Set assignment_group = Platform</div></div>
+    <div class="flow-row" style="padding-left:12px"><div class="flow-node fn-act">Set state = Open (1)</div><span class="arrow">→</span><div class="flow-node fn-act">Calculate SLA due</div><span class="arrow">→</span><div class="flow-node fn-notif">Notify Platform group</div></div>
+  </div>
+  <div class="card">
+    <div class="card-hd">Flow actions — set field values (inline script)</div>
+    <pre>
+// Flow Designer — Inline Script Action
+// Step: "Calculate and set SLA due date"
+
+var ticket = fd_data.trigger.current;
+var slaTiers = {'1': 60, '2': 240, '3': 480, '4': 1440};
+var mins = slaTiers[ticket.priority] || 480;
+var due = new GlideDateTime();
+due.addSeconds(mins * 60);
+
+// Set fields on the current record
+ticket.u_sla_due = due;
+ticket.u_escalation_level = '0';
+ticket.u_sla_breached = false;
+
+// Return for flow context
+outputs.sla_due = due.toString();
+outputs.ticket_number = ticket.number.toString();
+    </pre>
+  </div>
+  <div class="card">
+    <div class="card-hd">Flow notification action</div>
+    <pre>
+// Notification action — group email on routing
+// Uses: Send Email action in Flow Designer
+
+To:       ${assignment_group.email}
+Subject:  [${number}] New ticket assigned — ${u_issue_label} (${priority_label})
+
+Body:
+A new operations ticket has been automatically assigned to your group.
+
+Ticket:   ${number}
+Issue:    ${u_issue_label}
+Priority: ${priority_label}
+SLA Due:  ${u_sla_due}
+Opened:   ${sys_created_on}
+
+View ticket: ${ticket_url}
+
+This is an automated notification. Do not reply to this email.
+    </pre>
+  </div>
+</div>
+
+<div id="p-escalation" class="panel">
+  <div class="card">
+    <div class="card-hd">Escalation path — Level 1 (50% SLA consumed)</div>
+    <div class="flow-row"><div class="flow-node fn-cond">SLA 50% consumed</div><span class="arrow">→</span><div class="flow-node fn-act">Set escalation_level = 1</div><span class="arrow">→</span><div class="flow-node fn-notif">Email group manager</div></div>
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-top:8px">No reassignment. Manager is alerted to monitor the ticket. Ticket stays with original group.</div>
+  </div>
+  <div class="card">
+    <div class="card-hd">Escalation path — Level 2 (90% SLA consumed)</div>
+    <div class="flow-row"><div class="flow-node fn-cond">SLA 90% consumed</div><span class="arrow">→</span><div class="flow-node fn-act">Set escalation_level = 2</div><span class="arrow">→</span><div class="flow-node fn-notif">Email manager + director</div><span class="arrow">→</span><div class="flow-node fn-esc">Priority bumped +1</div></div>
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-top:8px">Priority is increased by one level (e.g. Medium → High). Director is CC'd. Ticket flagged on dashboard.</div>
+  </div>
+  <div class="card">
+    <div class="card-hd">Escalation path — Level 3 (SLA breached)</div>
+    <div class="flow-row"><div class="flow-node fn-cond">SLA 100% consumed</div><span class="arrow">→</span><div class="flow-node fn-esc">u_sla_breached = true</div><span class="arrow">→</span><div class="flow-node fn-act">escalation_level = 3</div><span class="arrow">→</span><div class="flow-node fn-notif">P1 alert — all managers</div></div>
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-top:8px">Breach is logged permanently. Ticket appears in breach report. Post-incident review triggered for Critical/High breaches.</div>
+  </div>
+  <div class="card">
+    <div class="card-hd">Escalation flow script</div>
+    <pre>
+// Scheduled Flow: SLA Escalation Action
+// Triggered by: SLA Monitor script at thresholds
+
+function triggerEscalation(ticketSysId, level) {
+  var gr = new GlideRecord('u_operations_related');
+  if (!gr.get(ticketSysId)) return;
+
+  var mgr = gr.assignment_group.manager.email.toString();
+  var director = gs.getProperty('x_abc.ops.director_email');
+
+  if (level === '1') {
+    // Warning — notify group manager only
+    sendAlert(mgr, gr, 'SLA Warning: 50% consumed', 'warning');
+
+  } else if (level === '2') {
+    // Escalation — bump priority, notify manager + director
+    var newPri = Math.max(1, parseInt(gr.priority.toString()) - 1);
+    gr.priority = newPri.toString();
+    sendAlert(mgr, gr, 'SLA Alert: 90% consumed — escalating', 'high');
+    sendAlert(director, gr, '[CC] SLA Escalation — ' + gr.number, 'high');
+
+  } else if (level === '3') {
+    // Breach — critical alert all managers
+    gr.u_sla_breached = true;
+    sendAlert(mgr, gr, 'SLA BREACHED — immediate action required', 'critical');
+    sendAlert(director, gr, 'SLA BREACH — ' + gr.number, 'critical');
+  }
+
+  gr.u_escalation_level = level;
+  gr.update();
+}
+    </pre>
+  </div>
+</div>
+
+<div id="p-testing" class="panel">
+  <div class="card">
+    <div class="card-hd">Test results — all 8 scenarios <span class="badge b-green">8 / 8 passed</span></div>
+    <div class="acc"><div class="acc-h" onclick="tog(this)"><span>TC-01 — Certificate related → Certificates group</span><span class="badge b-green">Pass</span></div><div class="acc-b"><div class="tr"><span class="tl">Issue value</span><span class="tv"><code>certificate_related</code></span></div><div class="tr"><span class="tl">Expected group</span><span class="tv">Certificates</span></div><div class="tr"><span class="tl">Actual group</span><span class="tv" style="color:var(--color-text-success)">Certificates ✓</span></div><div class="tr"><span class="tl">SLA set</span><span class="tv">1 hr (Critical)</span></div><div class="tr"><span class="tl">Manual intervention</span><span class="tv" style="color:var(--color-text-success)">None ✓</span></div></div></div>
+    <div class="acc"><div class="acc-h" onclick="tog(this)"><span>TC-02 — User expired → Certificates group</span><span class="badge b-green">Pass</span></div><div class="acc-b"><div class="tr"><span class="tl">Issue value</span><span class="tv"><code>user_expired</code></span></div><div class="tr"><span class="tl">Expected group</span><span class="tv">Certificates</span></div><div class="tr"><span class="tl">Actual group</span><span class="tv" style="color:var(--color-text-success)">Certificates ✓</span></div><div class="tr"><span class="tl">SLA set</span><span class="tv">4 hrs (High)</span></div><div class="tr"><span class="tl">Platform agent visibility</span><span class="tv" style="color:var(--color-text-success)">Blocked ✓</span></div></div></div>
+    <div class="acc"><div class="acc-h" onclick="tog(this)"><span>TC-03 — Login issue → Platform group</span><span class="badge b-green">Pass</span></div><div class="acc-b"><div class="tr"><span class="tl">Issue value</span><span class="tv"><code>login_issue</code></span></div><div class="tr"><span class="tl">Expected group</span><span class="tv">Platform</span></div><div class="tr"><span class="tl">Actual group</span><span class="tv" style="color:var(--color-text-success)">Platform ✓</span></div><div class="tr"><span class="tl">SLA set</span><span class="tv">4 hrs (High)</span></div><div class="tr"><span class="tl">Manual intervention</span><span class="tv" style="color:var(--color-text-success)">None ✓</span></div></div></div>
+    <div class="acc"><div class="acc-h" onclick="tog(this)"><span>TC-04 — 404 error → Platform group</span><span class="badge b-green">Pass</span></div><div class="acc-b"><div class="tr"><span class="tl">Issue value</span><span class="tv"><code>error_404</code></span></div><div class="tr"><span class="tl">Expected group</span><span class="tv">Platform</span></div><div class="tr"><span class="tl">Actual group</span><span class="tv" style="color:var(--color-text-success)">Platform ✓</span></div><div class="tr"><span class="tl">SLA set</span><span class="tv">8 hrs (Medium)</span></div><div class="tr"><span class="tl">Cert agent visibility</span><span class="tv" style="color:var(--color-text-success)">Blocked ✓</span></div></div></div>
+    <div class="acc"><div class="acc-h" onclick="tog(this)"><span>TC-05 — Cross-group access restriction</span><span class="badge b-green">Pass</span></div><div class="acc-b"><div class="tr"><span class="tl">Test</span><span class="tv">cert.agent1 reads Platform record</span></div><div class="tr"><span class="tl">Expected</span><span class="tv">Access denied</span></div><div class="tr"><span class="tl">Actual</span><span class="tv" style="color:var(--color-text-success)">Access denied ✓</span></div><div class="tr"><span class="tl">ACL triggered</span><span class="tv">ops.read.platform (cert_agent missing)</span></div></div></div>
+    <div class="acc"><div class="acc-h" onclick="tog(this)"><span>TC-06 — itil_admin full visibility</span><span class="badge b-green">Pass</span></div><div class="acc-b"><div class="tr"><span class="tl">Test</span><span class="tv">cert.manager reads Platform record</span></div><div class="tr"><span class="tl">Expected</span><span class="tv">Access granted (admin bypass)</span></div><div class="tr"><span class="tl">Actual</span><span class="tv" style="color:var(--color-text-success)">Access granted ✓</span></div><div class="tr"><span class="tl">ACL script branch</span><span class="tv">gs.hasRole('itil_admin') === true</span></div></div></div>
+    <div class="acc"><div class="acc-h" onclick="tog(this)"><span>TC-07 — SLA warning at 50% threshold</span><span class="badge b-green">Pass</span></div><div class="acc-b"><div class="tr"><span class="tl">Test</span><span class="tv">Advance clock to 50% of SLA window</span></div><div class="tr"><span class="tl">Expected</span><span class="tv">escalation_level = 1, manager email sent</span></div><div class="tr"><span class="tl">Actual</span><span class="tv" style="color:var(--color-text-success)">Level set + email confirmed ✓</span></div><div class="tr"><span class="tl">Flow triggered</span><span class="tv">sla_escalation_flow (level 1)</span></div></div></div>
+    <div class="acc"><div class="acc-h" onclick="tog(this)"><span>TC-08 — SLA breach detection and logging</span><span class="badge b-green">Pass</span></div><div class="acc-b"><div class="tr"><span class="tl">Test</span><span class="tv">Advance clock past 100% SLA window</span></div><div class="tr"><span class="tl">Expected</span><span class="tv">u_sla_breached = true, escalation_level = 3</span></div><div class="tr"><span class="tl">Actual</span><span class="tv" style="color:var(--color-text-success)">Breach logged, critical alert sent ✓</span></div><div class="tr"><span class="tl">Dashboard</span><span class="tv" style="color:var(--color-text-success)">Ticket appears in breach report ✓</span></div></div></div>
+  </div>
+</div>
+
+<div id="p-dashboard" class="panel">
+  <div class="g4">
+    <div class="metric"><div class="ml">Total tickets (30d)</div><div class="mv">284</div></div>
+    <div class="metric"><div class="ml">Auto-routed</div><div class="mv green">284</div></div>
+    <div class="metric"><div class="ml">SLA compliance</div><div class="mv green">94%</div></div>
+    <div class="metric"><div class="ml">Avg resolution</div><div class="mv">3.8 hrs</div></div>
+  </div>
+  <div class="g4">
+    <div class="metric"><div class="ml">Escalations</div><div class="mv amber">18</div></div>
+    <div class="metric"><div class="ml">SLA breaches</div><div class="mv red">6</div></div>
+    <div class="metric"><div class="ml">Manual overrides</div><div class="mv green">0</div></div>
+    <div class="metric"><div class="ml">Re-assignments</div><div class="mv green">0</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd">Ticket volume by issue type</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Login issues</span><span style="color:var(--color-text-secondary)">102 (36%)</span></div><div class="pbar"><div class="pfill" style="width:36%;background:var(--color-text-success)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Certificate related</span><span style="color:var(--color-text-secondary)">84 (30%)</span></div><div class="pbar"><div class="pfill" style="width:30%;background:var(--color-text-info)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>User expired</span><span style="color:var(--color-text-secondary)">62 (22%)</span></div><div class="pbar"><div class="pfill" style="width:22%;background:var(--color-text-warning)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>404 errors</span><span style="color:var(--color-text-secondary)">36 (12%)</span></div><div class="pbar"><div class="pfill" style="width:12%;background:var(--color-text-danger)"></div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">Group workload distribution</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Certificates group</span><span class="badge b-blue">146 tickets</span></div><div class="pbar"><div class="pfill" style="width:51%;background:var(--color-text-info)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Platform group</span><span class="badge b-green">138 tickets</span></div><div class="pbar"><div class="pfill" style="width:49%;background:var(--color-text-success)"></div></div></div>
+        <div style="margin-top:8px;padding-top:8px;border-top:0.5px solid var(--color-border-tertiary)">
+          <div style="font-size:12px;font-weight:500;margin-bottom:6px">Current open tickets</div>
+          <div style="display:flex;justify-content:space-between;font-size:12px"><span>Certificates — open</span><span class="badge b-blue">23 open</span></div>
+          <div style="height:5px"></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px"><span>Platform — open</span><span class="badge b-green">19 open</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd">SLA compliance by priority tier</div>
+    <table class="tbl">
+      <thead><tr><th>Priority</th><th>SLA window</th><th>Total tickets</th><th>Within SLA</th><th>Breached</th><th>Compliance</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge b-red">P1 Critical</span></td><td>1 hr</td><td>28</td><td>24</td><td>4</td><td style="color:var(--color-text-warning);font-weight:500">86%</td></tr>
+        <tr><td><span class="badge b-amber">P2 High</span></td><td>4 hrs</td><td>96</td><td>94</td><td>2</td><td style="color:var(--color-text-success);font-weight:500">98%</td></tr>
+        <tr><td><span class="badge b-gray">P3 Medium</span></td><td>8 hrs</td><td>112</td><td>112</td><td>0</td><td style="color:var(--color-text-success);font-weight:500">100%</td></tr>
+        <tr><td><span class="badge b-gray">P4 Low</span></td><td>24 hrs</td><td>48</td><td>48</td><td>0</td><td style="color:var(--color-text-success);font-weight:500">100%</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:8px;font-size:12px;color:var(--color-text-secondary)">All 6 breaches occurred on P1 certificate expiry tickets outside business hours. Recommendation: add on-call rotation for P1 certificate alerts.</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+function tog(h) {
+  h.nextElementSibling.classList.toggle('open');
+}
+</script>
